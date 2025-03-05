@@ -1,5 +1,5 @@
 resource "yandex_lb_network_load_balancer" "lb-1" {
-  name = "network-load-balancer-new"  # Изменили имя
+  name = "network-load-balancer-new"  
 
   listener {
     name = "listener"
