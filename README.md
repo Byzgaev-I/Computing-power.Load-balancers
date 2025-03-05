@@ -100,26 +100,85 @@ resource "yandex_compute_instance_group" "ig-1" {
 
 ![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/целевые%20группы.png)  
 
+![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/инфраструктура.png)
+
 ![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/Картинка%20и%20lamp.png)  
 
 
+**3. Настройка балансировщика нагрузки**  
+**3.1. Создание балансировщика**   
+
+Конфигурация в файле load-balancer.tf:
+
+```hcl
+resource "yandex_lb_network_load_balancer" "lb-1" {
+  name = "network-load-balancer-new"
+  listener {
+    name = "listener"
+    port = 80
+    external_address_spec {
+      ip_version = "ipv4"
+    }
+  }
+  attached_target_group {
+    target_group_id = yandex_compute_instance_group.ig-1.load_balancer[0].target_group_id
+    healthcheck {
+      name = "http"
+      http_options {
+        port = 80
+        path = "/"
+      }
+    }
+  }
+}
+```
+
+**3.2. Проверка отказоустойчивостиа**  
+**Остановка одной ВМ:**
+
+```bash
+yc compute instance stop fhm2bv7ilt74m7kmjtv3
+```
+
+**Проверка списка ВМ после остановки:**
+
+```bash
+yc compute instance list
+```
+
+**Проверка работы балансировщика:**
+
+```bash
+yc load-balancer network-load-balancer list  
+```
+
+![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/3-2%20проверка.png)
 
 
+**Результаты**  
+**Созданная инфраструктура:**  
+  
+- Бакет Object Storage: byzgaev-20250305  
+- Группа из 3 ВМ с LAMP  
+- Сетевой балансировщик нагрузки  
+- IP балансировщика: 84.252.135.0  
 
+![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/балансировщик%20842521350.png)  
 
+**Проверка работоспособности:**  
+  
+- Картинка доступна из интернета  
+- Веб-сервер отвечает на запросы  
+- Балансировщик распределяет нагрузку  
+- Система сохраняет работоспособность при отказе одной ВМ   
 
+Использованные файлы конфигурации
 
-
-
-
-
-
-
-
-
-
-
-
+- provider.tf - настройки провайдера  
+- network.tf - конфигурация сети  
+- instance-group.tf - настройки группы ВМ  
+- load-balancer.tf - конфигурация балансировщика  
+  
 
 
 
