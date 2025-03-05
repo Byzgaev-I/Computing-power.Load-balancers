@@ -27,8 +27,13 @@ aws --endpoint-url=https://storage.yandexcloud.net \
 
 
 
+**1.3.Настройка публичного доступа
 
+```bash
+yc storage bucket update byzgaev-20250305 --public-read
+```
 
+![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/1-3.png)
 
 
 
