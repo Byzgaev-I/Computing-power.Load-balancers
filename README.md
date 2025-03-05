@@ -27,7 +27,7 @@ aws --endpoint-url=https://storage.yandexcloud.net \
 
 
 
-**1.3.Настройка публичного доступа
+**1.3.Настройка публичного доступа**
 
 ```bash
 yc storage bucket update byzgaev-20250305 --public-read
@@ -36,10 +36,35 @@ yc storage bucket update byzgaev-20250305 --public-read
 ![image](https://github.com/Byzgaev-I/Computing-power.Load-balancers/blob/main/1-3.png)
 
 
+**1. Создание группы виртуальных машин**
+**2.1. Создание Instance Group**
 
+Конфигурация в файле instance-group.tf:
 
+```hcl
+resource "yandex_compute_instance_group" "ig-1" {
+  name               = "fixed-ig-with-balancer-new"
+  folder_id          = "b1gam4o6rj97es4peaq4"
+  service_account_id = "ajeg971iui9o2i1ia9ai"
+  
+  instance_template {
+    platform_id = "standard-v1"
+    resources {
+      memory = 2
+      cores  = 2
+    }
+    boot_disk {
+      initialize_params {
+        image_id = "fd827b91d99psvq5fjit"
+      }
+    }
+    network_interface {
+      network_id = yandex_vpc_network.network.id
+      subnet_ids = [yandex_vpc_subnet.subnet.id]
+      nat       = true
+    }
 
-
+```
 
 
 
